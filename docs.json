@@ -1,0 +1,218 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "Development Portal",
+    "colors": {
+        "primary": "#A30A54",
+        "light": "#EA4293",
+        "dark": "#A30A54"
+    },
+    "favicon": "/favicon.svg",
+    "navigation": {
+        "languages": [
+            {
+                "language": "en",
+                "tabs": [
+                    {
+                        "tab": "ACT Geosafe",
+                        "groups": [
+                            {
+                                "group": "Get Started",
+                                "pages": [
+                                    "introduction",
+                                    "consoleuserguide",
+                                    "integration_process"
+                                ]
+                            },
+                            {
+                                "group": "ACT Geosafe",
+                                "pages": [
+                                    "geosafe/geosafe",
+                                    "geosafe/SDK-iOS",
+                                    "geosafe/SDK-Android",
+                                    "geosafe/SDK-ReactNative",
+                                    "geosafe/SDK-Xamarin",
+                                    "geosafe/previous_versions/version_list"
+                                ]
+                            },
+                            {
+                                "group": "ACT Verify",
+                                "pages": [
+                                    "verify/overview",
+                                    "verify/SDK-Web",
+                                    "verify/previous_versions/version_list"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "tab": "ACT Sports Integrity",
+                        "groups": [
+                            {
+                                "group": "ACT Sports Integrity",
+                                "pages": [
+                                    "si/si",
+                                    "si/si2",
+                                    "si/si3",
+                                    "si/si4",
+                                    "si/si5",
+                                    "si/integration",
+                                    "si/troubleshooting"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "tab": "ACT ID (KYC)",
+                        "groups": [
+                            {
+                                "group": "ACT ID (KYC)",
+                                "pages": [
+                                    "id/id",
+                                    "id/integration",
+                                    "id/previous_versions/version_list"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "tab": "Contact Us",
+                        "groups": [
+                            {
+                                "group": "Contact US",
+                                "pages": [
+                                    "contact/submission-form",
+                                    "contact/contact-us-form",
+                                    "contact/demo-access",
+                                    "contact/help-center"
+                                ]
+                            }
+                        ]
+                    }
+                ]                
+            },
+            {
+                "language": "pt-BR",
+                "tabs": [
+                    {
+                        "tab": "ACT Geosafe",
+                        "groups": [
+                            {
+                                "group": "Começar",
+                                "pages": [
+                                    "lang/pt-BR/introduction",
+                                    "lang/pt-BR/consoleuserguide"
+                                ]
+                            },
+                            {
+                                "group": "ACT Geosafe",
+                                "pages": [
+                                    "lang/pt-BR/geosafe/geosafe",
+                                    "lang/pt-BR/geosafe/SDK-iOS",
+                                    "lang/pt-BR/geosafe/SDK-Android",
+                                    "lang/pt-BR/geosafe/SDK-ReactNative",
+                                    "lang/pt-BR/geosafe/SDK-Xamarin"
+                                ]
+                            },
+                            {
+                                "group": "ACT Verify",
+                                "pages": [
+                                    "lang/pt-BR/verify/overview",
+                                    "lang/pt-BR/verify/SDK-Web"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "tab": "ACT ID (KYC)",
+                        "groups": [
+                            {
+                                "group": "Contate-nos",
+                                "pages": [
+                                    "lang/pt-BR/id/id",
+                                    "lang/pt-BR/id/integration"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "tab": "Contate-nos",
+                        "groups": [
+                            {
+                                "group": "Contate-nos",
+                                "pages": [
+                                    "lang/pt-BR/contact/submission-form",
+                                    "lang/pt-BR/contact/contact-us-form"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "global": {
+            "anchors": [
+               
+            ]
+        }
+    },
+    "logo": {
+        "light": "/logo/ACT-logo-no-text-dark.png",
+        "dark": "/logo/ACT-logo-no-text-light.png"
+    },
+    "navbar": {
+        "links": [
+            {
+                "label": "ACT Geosafe Console",
+                "href": "https://staging.advancedcompliance.tech"
+            },
+            {
+                "label": "ACT Verify QR Generator",
+                "href": "mailto:support@advancedcompliance.tech"
+            },
+            {
+                "label": "Support",
+                "href": "mailto:support@advancedcompliance.tech"
+            }
+        ],
+        "primary": {
+            "type": "button",
+            "label": "Demo",
+            "href": "https://demo.advancedcompliance.tech"
+        }
+    },
+
+  "footer": {
+    "socials": {
+      "website": "https://advancedcompliance.tech"
+    },
+    "links": [
+      {
+      "header": "Legal",
+      "items": [
+         {
+          "label": "Terms & Conditions",
+          "href": "https://dev-admin.advancedcompliance.tech/terms-and-conditions"
+         },
+          {
+          "label": "Privacy Policy",
+          "href": "https://dev-admin.advancedcompliance.tech/privacy-policy"
+         }
+      ]
+    },
+        {
+      "header": "Company",
+      "items": [
+         {
+          "label": "Advanced Compliance Technology Ltd",
+             "href": "https://advancedcompliance.tech"
+         },
+          {
+          "label": "Las Vegas, 89119",
+              "href": "https://advancedcompliance.tech"
+         }
+      ]
+    }
+      ]
+  }
+}

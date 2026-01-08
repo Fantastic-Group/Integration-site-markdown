@@ -1,0 +1,104 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Development Portal",
+  "logo": {
+    "dark": "/logo/ACT-logo-no-text-light.png",
+    "light": "/logo/ACT-logo-no-text-dark.png"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#A30A54",
+    "light": "#EA4293",
+    "dark": "#A30A54",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "locales": ["en", "pt", "es"],
+  "defaultLocale": "en",
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@advancedcompliance.tech"
+    }
+  ],
+  "topbarCtaButton": [
+    {
+      "label": "Geosafe Console",
+      "href": "https://demo.advancedcompliance.tech"
+    },
+    {
+      "label": "ACT Verify QR generator",
+      "href": "https://yourdomain.com/get-started"
+    }
+  ],
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Console User Guide",
+      "icon": "book-open-cover",
+      "url": "https://integration.advancedcompliance.tech/consoleuserguide"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction"
+      ]
+    },
+    {
+      "group": "ACT Geo",
+      "pages": [
+        "geosafe/geosafe",        
+        "geosafe/SDK-iOS",
+        "geosafe/SDK-Android"
+      ]
+    },
+    {
+      "group": "ACT Verify",
+      "pages": [       
+        "verify/SDK-Web"
+      ]
+    },
+    {
+      "group": "ACT ID",
+      "pages": [
+        "id/id",
+        "id/integration"
+      ]
+    },
+    {
+      "group": "ACT Sports Integrity",
+      "pages": [
+        "si/si",
+        "si/integration"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/introduction"
+      ]
+    },
+    {
+      "group": "Endpoint Examples",
+      "pages": [
+        "api-reference/endpoint/get",
+        "api-reference/endpoint/create",
+        "api-reference/endpoint/delete"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/mintlify",
+    "github": "https://github.com/mintlify",
+    "linkedin": "https://linkedin.com/company/mintlify"
+  }
+}
