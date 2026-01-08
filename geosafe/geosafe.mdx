@@ -1,0 +1,77 @@
+---
+title: Overview
+description: 'Welcome to the ACT Geosafe documentation'
+icon: 'location-dot'
+---
+
+## Overview
+
+ACT Geosafe integrates into your applications to provide a seemless geolocation service.
+
+Geosafe verifies the location of your customer at any required point.  These checks also include many anti-fraud detection tools to ensure that your customer is within the required jurisdiction for your product.
+
+The anti-fraud checks also include constant monitoring of your clients actions and activity to prevent account takeovers and user spoofing.
+
+There are 2 different types of checks that you can perform using the ACT Geosafe SDK 
+
+- **On Demand Checks** – for the likes of checking where a customer is when they login, place a wager, deposit cash etc. 
+
+- **Continuous Checks** – for when a customer is playing slots and you need to constantly check on their location, the frequency of the checks is configurable 
+
+### On Demand Checks 
+
+#### Initialise 
+
+The first call to the SDK is the Initialization call.  This requires an API Key to identify who you are and what Jurisdiction you are licensed to. 
+
+#### Start / Stop location service 
+
+Once the SDK is Initialized, you can start the location services.  These should be started before you need to check a customer's location and stopped after you have confirmed their location: 
+
+- **Login** 
+If your customers location needs to be checked when they login, you can start the location services as they enter the login screen and stop the location services when they are successfully logged in. 
+
+- **Placing / Validating Wagers**
+If your customers location needs to be checked whilst they are placing wagers, you start the location services as the customer enters the wagering section of your application and you can check their location whenever they validate or place a wager, once the customer exits the wagering section of your application, you can stop the location service 
+
+### On Demand Checks 
+
+#### Initialise 
+
+The first call to the SDK is the Initialization call.  This requires an API Key to identify who you are and what Jurisdiction you are licensed to. 
+
+#### Start / Stop time-based location checks 
+
+Once the SDK is Initialized, you can start the time-based location services.  These should be started before you need to check a customer's location and stopped after you have confirmed their location: 
+
+- **Slots**
+If your customers location needs to be checked whilst they are playing slots, you can start the time-based location services as they enter the area of your application where the slots are.  The time-based location services should be stopped as they exit the slots 
+
+### Request location 
+
+When a location is checked the following can be returned 
+
+- <span class="green">Customer is inside the jurisdiction</span>
+
+- <span class="maroon">Customer is outside the jurisdiction</span>
+
+- <span class="maroon">Location is unknown (e.g. middle of the ocean) </span>
+
+- <span class="maroon">Location services are disabled on the customers device </span>
+
+- <span class="maroon">The customer has tampered with their device </span>
+
+- <span class="maroon">The customer is attempting to emulate their location (e.g. using a VPN. Proxy) </span>
+
+- <span class="maroon">The customer is attempting to simulate their location (e.g. using software on the device, using an emulator) </span>
+
+- <span class="maroon">The customer's account has been blocked by you for suspicious activity </span>
+
+- <span class="maroon">The customer's device has been blocked by you for suspicious activity </span>
+
+- <span class="maroon">The customer’s device has been blacklisted and is blocked across all ACT clients </span>
+
+- <span class="maroon">The customer is using an IP address that has been blacklisted  </span>
+
+The first response is the only response that was successful, the rest are all failures
+

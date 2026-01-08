@@ -1,0 +1,277 @@
+---
+title: 'SDK Integration (React Native)'
+description: 'ACT GEOSAFE – React Native SDK'
+icon: 'book-open-cover'
+---
+
+## ACT GEOSAFE – React Native SDK 
+
+#### Document Version: 1.0 
+
+#### SDK Version: 1.1.12. + 1.15 
+
+<a style={{ color: '#A30A54', fontStyle: 'italic', fontWeight: 300 }} href="https://integration.advancedcompliance.tech/geosafe/previous_versions/version_list">Previous Versions</a>
+
+### Overview  
+
+The `ACT GEO React Native` SDK provides seamless integration with the ActGeo platform, enabling location-based services and monitoring in React Native applications. This SDK bridges native Android and iOS ActGeo functionalities to React Native, offering an easy-to-use API for developers. 
+
+### Key Features 
+
+- **Initialize ActGeo SDK:** Configure and set up the SDK with your API credentials. 
+
+- **Real-Time Location Monitoring:** Start and stop location tracking with simple commands. 
+
+- **Location Validation:** Check the current location's status. 
+
+- **Cross-Platform Support:** Works seamlessly on both Android and iOS. 
+
+### Installation 
+
+```javascript 
+npm install react-native-actgeo 
+```
+
+### Usage 
+
+```javascript 
+import { 
+  initSDK, 
+  start, 
+  stop, 
+  sendLocationCheck, 
+  destroy, 
+} from 'react-native-actgeo'; 
+```
+
+### Initialise SDK 
+
+Initializes the SDK with the necessary configuration parameters. 
+
+```javascript 
+initSDK( 
+    apiKey: string, 
+    baseURL: string 
+): Promise<void>; 
+```
+### Parameters 
+
+- **apiKey** (string): The API key for authentication. (Required) 
+
+- **baseURL** (string): The base URL of the service. (Required) 
+
+### Returns 
+
+A Promise that resolves when the SDK is successfully initialized or rejects with an error. 
+
+### Usage Example 
+
+```javascript 
+import { initSDK } from 'react-native-actgeo'; 
+ 
+// Initialize SDK 
+initSDK( 
+  "your-api-key", 
+  "https://example.com" 
+).then((result) => { 
+  console.log("SDK initialized:", result); 
+}).catch((err) => { 
+  console.error("SDK initialization failed:", err); 
+}); 
+```
+
+### Starts the location monitoring 
+
+```javascript 
+start(): Promise<string>; 
+```
+
+### Returns 
+
+A Promise that resolves with a confirmation message (string) when the monitoring starts successfully or rejects with an error. 
+
+### Usage Example 
+
+```javascript 
+import { start } from 'react-native-actgeo'; 
+ 
+// Start location monitoring 
+start() 
+  .then((message) => { 
+    console.log("Location monitoring started:", message); 
+  }) 
+  .catch((err) => { 
+    console.error("Failed to start location monitoring:", err); 
+  }); 
+```
+
+### Stops the location monitoring 
+
+```javascript 
+stop(): Promise<string>; 
+```
+
+### Returns 
+
+A Promise that resolves with a confirmation message (string) when the monitoring stops successfully or rejects with an error. 
+
+### Usage Example 
+
+```javascript 
+import { stop } from 'react-native-actgeo'; 
+ 
+// Stop location monitoring 
+stop() 
+  .then((message) => { 
+    console.log("Location monitoring stopped:", message); 
+  }) 
+  .catch((err) => { 
+    console.error("Failed to stop location monitoring:", err); 
+  }); 
+```
+
+<CardGroup cols={1}>
+  <Card
+    title="Android Only:"
+    icon="Android"
+  >
+    Clears the internal state of the SDK and stops any ongoing processes. 
+  </Card>
+</CardGroup>
+```javascript 
+destroy(): Promise<string>; 
+```
+
+## Returns 
+
+A Promise that resolves with a confirmation message (string) when the SDK is successfully cleared and destroyed or rejects with an error. 
+
+## Usage Example 
+
+```javascript 
+import { destroy } from 'react-native-actgeo'; 
+ 
+// Destroy the SDK instance 
+destroy() 
+  .then((message) => { 
+    console.log("SDK successfully destroyed:", message); 
+  }) 
+  .catch((err) => { 
+    console.error("Failed to destroy SDK:", err); 
+  }); 
+```
+ 
+Requests the current location status 
+
+Requests the current location status based on the provided account ID and reason for lookup. 
+
+```javascript 
+sendLocationCheck( 
+  accountId: string, 
+  reasonForLookup: Int32 
+): Promise<string>; 
+``` 
+
+## Parameters 
+
+- **accountId (string):** The account ID associated with the location check. (Required) 
+
+- **reasonForLookup (Int32):** The reason for initiating the location check, represented as an integer. (Required) 
+
+
+ 
+## Returns
+
+A Promise that resolves with an object containing the following properties: 
+
+**hardwareStatus** (number): The hardware status code. 
+
+**location** (object): The location details with: 
+
+**latitude** (number): The latitude of the current location. 
+
+**longitude** (number): The longitude of the current location. 
+
+**locationStatus** (number): The location status code. 
+
+The promise rejects with an error if the location check fails. 
+
+## Usage Example 
+ 
+```javascript 
+import { sendLocationCheck } from 'react-native-actgeo'; 
+ 
+// Perform a location check 
+sendLocationCheck("account-id", 1) 
+  .then((result) => { 
+    console.log("Location check result:"); 
+    console.log("Hardware Status:", result.hardwareStatus); 
+    console.log("Location:", result.location.latitude, result.location.longitude); 
+    console.log("Location Status:", result.locationStatus); 
+  }) 
+  .catch((err) => { 
+    console.error("Location check failed:", err); 
+  }); 
+```
+
+## Android Specific Setup 
+
+Please place the debug and release .aar files in the following respective locations: 
+
+- **Debug:** app/libs/debug 
+
+- **Release:** app/libs/release 
+
+Include network and location-related permissions in the AndroidManifest.xml file 
+
+```javascript 
+<uses-permission android:name="android.permission.INTERNET"/> 
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+```
+ 
+In the project's Gradle file, add the following configuration: 
+
+```javascript 
+allprojects { 
+    repositories { 
+        ... 
+        flatDir { 
+            dirs "$rootDir/app/libs/debug", "$rootDir/app/libs/release" 
+        } 
+    } 
+} 
+```
+ 
+In the app's Gradle file, include the following: 
+ 
+```javascript 
+dependencies { 
+    ... 
+ 
+    debugImplementation(name: 'fantasticSdk-debug', ext: 'aar') 
+    releaseImplementation(name: 'fantasticSdk-release', ext: 'aar') 
+ 
+    // Ensure accessibility for both the client and bridge code 
+    implementation project(':react-native-actgeo') 
+ 
+    // Update versions as required for your project 
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0' 
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0' 
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0' 
+    implementation 'com.google.android.gms:play-services-location:21.0.1' 
+} 
+```
+ 
+## iOS Specific Setup 
+
+Add the necessary permissions in your `Info.plist`: 
+
+```javascript 
+ <key>NSLocationAlwaysAndWhenInUseUsageDescription</key> 
+   <string>We need access to your location for providing location-based services.</string> 
+   <key>NSLocationWhenInUseUsageDescription</key> 
+   <string>We need access to your location for providing location-based services.</string> 
+```
+

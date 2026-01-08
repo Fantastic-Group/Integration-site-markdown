@@ -1,0 +1,283 @@
+---
+title: 'SDK Integration (Xamarin)'
+description: 'ACT GEOSAFE – Xamarin SDK '
+icon: 'book-open-cover'
+---
+
+## ACT GEOSAFE - Xamarin SDK 
+
+#### Document Version: 0.1.15 
+
+#### SDK Version: 1.1.12. + 1.15 
+
+<a style={{ color: '#A30A54', fontStyle: 'italic', fontWeight: 300 }} href="https://integration.advancedcompliance.tech/geosafe/previous_versions/version_list">Previous Versions</a>
+
+### Overview  
+
+The ACT GEO Xamarin SDK provides integration with the Act.Geo platform, enabling location-based services and monitoring in Xamarin applications. This SDK bridges native Android and iOS ActGeo functionalities to Xamarin, offering an easy-to-use API for developers. 
+
+### Key Features 
+
+- **Initialize ActGeo SDK:** Configure and set up the SDK with your API credentials. 
+
+- **Location Monitoring:** Start and stop location tracking with simple commands. 
+
+- **Location Validation:** Check the current location's status. 
+
+- **Cross-Platform Support:** Works on both Android and iOS. 
+
+### Installation 
+
+#### Xamarin.iOS 
+
+1. Add the compiled `ActGeo.iOS.dll` library to your Xamarin.iOS project. 
+
+2. Ensure you include the required iOS permissions in your app's `Info.plist`. 
+
+#### Xamarin.Android 
+
+1. Reference the `ActGeo.Android.dll` in your Xamarin Android project. 
+
+2. Include references to the following packages in your project: 
+
+- Xamarin.Kotlin.StdLib 
+
+- Square.OkHttp3 
+
+- Square.Retrofit2 
+
+- Square.Retrofit2.ConverterGson 
+
+- Xamarin.GooglePlayServices.Location 
+
+### Usage 
+
+### 1. iOS SDK 
+
+#### Initialize SDK 
+
+The `ACTGeoSDK` class is used to manage the iOS SDK's location functionality. To initialize, call the `InstallWithApiKey` method: 
+
+```cs
+using ACTGeoSDKBinding; 
+ 
+var config = new Config() 
+    .SetApiKey("your-api-key") 
+    .BaseURL("https://api.example.com/") 
+    .IsDebug(true) 
+    .Build(); 
+ 
+ACTGeoSDK.Shared.InstallWithApiKey("your-api-key", config); 
+```
+
+You can optionally set delegates for initialization and checks: 
+
+```cs
+ACTGeoSDK.Shared.SetInitDelegate(new InitDelegate()); 
+ACTGeoSDK.Shared.SetCheckDelegate(new CheckDelegate()); 
+ 
+// Example InitDelegate implementation 
+public class InitDelegate : ACTInitialiseDelegate 
+{ 
+    public override void InitialiseCompleted() 
+    { 
+        Console.WriteLine("SDK initialized successfully."); 
+    } 
+ 
+    public override void InitialiseFailedWithMessage(string message) 
+    { 
+        Console.WriteLine($"Initialization failed: {message}"); 
+    } 
+} 
+ 
+// Example CheckDelegate implementation 
+public class CheckDelegate : ACTCheckDelegate 
+{ 
+    public override void ChecksStarted() 
+    { 
+        Console.WriteLine("Checks started."); 
+    } 
+ 
+    public override void CheckStartFailedWithError(StartError error) 
+    { 
+        Console.WriteLine($"Check start failed with error: {error}"); 
+    } 
+ 
+    public override void LocationStatusChanged() 
+    { 
+        Console.WriteLine("Location status changed."); 
+    } 
+} 
+```
+ 
+#### Start Location Monitoring 
+
+To start location tracking: 
+
+```cs
+ACTGeoSDK.Shared.StartChecks(new CheckDelegate()); 
+```
+
+#### Stop Location Monitoring 
+
+To stop location tracking: 
+
+```cs
+ACTGeoSDK.Shared.StopChecks(); 
+```
+
+#### Request Location Status 
+
+To perform a location check and retrieve the status: 
+
+```cs
+ACTGeoSDK.Shared.RequestLocationStatusWithAccountID("accountId123", 1, result => 
+{ 
+    if (result != null) 
+    { 
+        Console.WriteLine($"Location check result: {result.ResultDescription}"); 
+    } 
+    else 
+    { 
+        Console.WriteLine("Location check failed."); 
+    } 
+}); 
+```
+
+### 2. Android SDK 
+
+#### Initialize SDK 
+
+The `LocationHandler` class is used to manage location-based functionality. To get an instance of `LocationHandler`, use the `GetInstance` method with the required parameters: 
+ 
+```cs
+var locationHandler = LocationHandler.GetInstance(context, apiKey, baseUrl); 
+locationHandler.Initialize(callback); 
+``` 
+
+#### Parameters 
+
+- **context** (Context): The current application or activity context. *(Required)* 
+
+- **apiKey** (string): The API key for authentication. *(Required)* 
+
+- **baseURL** (string): The base URL of the service. *(Required)* 
+
+```cs
+using Com.Fantastic.Sdk; 
+ 
+var context = Android.App.Application.Context; 
+string apiKey = "your-api-key"; 
+string baseUrl = "https://api.example.com/"; 
+var callback = new BooleanCallback(isInitialized => 
+{ 
+    if (isInitialized) 
+    { 
+        Console.WriteLine("SDK initialized successfully."); 
+    } 
+    else 
+    { 
+        Console.WriteLine("SDK initialization failed."); 
+    } 
+}); 
+ 
+var locationHandler = LocationHandler.GetInstance(context, apiKey, baseUrl); 
+locationHandler.Initialize(callback); 
+ 
+// Boolean callback example 
+public class BooleanCallback : Java.Lang.Object, IFunction1 
+{ 
+    private readonly Action<bool> _callback; 
+ 
+    public BooleanCallback(Action<bool> callback) 
+    { 
+        _callback = callback; 
+    } 
+ 
+    public Java.Lang.Object Invoke(Java.Lang.Object parameter) 
+    { 
+        if (parameter is Java.Lang.Boolean booleanParam) 
+        { 
+            _callback?.Invoke(booleanParam.BooleanValue()); 
+        } 
+        return null;  
+    } 
+} 
+```
+ 
+
+#### Start Location Monitoring 
+
+To start location tracking, use the `Start()` method of the `LocationHandler` instance: 
+
+Example  
+
+```cs
+locationHandler.Start(); 
+```
+
+#### Stop Location Monitoring 
+
+To stop location tracking, simply call the `Stop()` method on the `LocationHandler` instance: 
+
+Example  
+
+```cs
+locationHandler.Stop(); 
+```
+ 
+#### Destroy SDK (Android Only) 
+
+To destroy the `LocationHandler` instance, call the `Destroy()` method: 
+
+Example 
+
+```cs
+locationHandler.Destroy(); 
+```
+ 
+#### Send Location Check 
+
+To perform a location check: 
+
+```cs
+locationHandle.RequestLocationStatus(accountId, reason, completion); 
+```
+ 
+#### Parameters 
+
+- **accountId (string):** The account ID for the location check. *(Required)* 
+
+- **reasonForLookup (int):** The reason for initiating the location check. *(Required)* 
+
+- **completion:** A callback function for the result. *(Required)* 
+
+### Platform-Specific Setup 
+
+### iOS Specific Setup 
+
+1. Add the necessary permissions in your `Info.plist`: 
+ 
+```cs
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key> 
+   <string>We need access to your location for providing location-based services.</string> 
+   <key>NSLocationWhenInUseUsageDescription</key> 
+   <string>We need access to your location for providing location-based services.</string> 
+```
+
+2. Ensure the following frameworks are linked in your project: 
+
+   - CoreLocation 
+
+3. Enable `Background Modes` for location updates in your Xcode project settings. 
+
+### Android Specific Setup 
+
+1. Include permissions in `AndroidManifest.xml`: 
+
+```cs
+   <uses-permission android:name="android.permission.INTERNET"/> 
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
+   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+```

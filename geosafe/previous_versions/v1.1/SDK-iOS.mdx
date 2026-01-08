@@ -1,0 +1,341 @@
+---
+title: 'SDK Integration (iOS)'
+description: 'The iOS integration document for the ACT Geosafe SDK'
+icon: 'apple'
+---
+
+Document Version: 0.1.15 
+
+SDK Version: 1.1
+
+<a style={{ color: '#A30A54', fontStyle: 'italic', fontWeight: 300 }} href="https://integration.advancedcompliance.tech/geosafe/previous_versions/version_list">Previous Versions</a>
+
+Supports iOS Version: 13+ 
+
+## **Overview** 
+
+**_ACTGeoSDK_** is an iOS SDK designed for compliance purposes. This SDK ensures that the user's location complies with regulatory requirements by performing checks and providing the necessary feedback to your application. 
+
+## **Integration** 
+
+### **Manual Integration**
+
+#### **Download the SDK**
+ 
+Obtain the latest version of the **_ACTGeoSDK_** from Fantastic Tech. 
+
+[Download the iOS SDK](https://integration.advancedcompliance.tech/geosafe/SDK-download)
+
+#### **Add the SDK to Your Project** 
+
+- Drag and drop the **_ACTGeoSDK.framework_** file into your Xcode project. 
+- Ensure that the framework is added to the "Embedded Binaries" and "Link Binary With Libraries" sections in your project settings. 
+- Verify that **_ACTGeoSDK.framework_** appears in the "Frameworks, Libraries, and Embedded Content" section with "Embed & Sign" selected. 
+
+### **Import the SDK**
+ 
+In the files where you want to use the SDK, import it as follows: 
+
+```swift
+import ACTGeoSDK 
+```
+
+## **Usage** 
+
+### **Adding Location Permissions to the App's Info.plist**
+
+To ensure the ACTGeoSDK functions correctly, add location permissions to your app's Info.plist file. Include the following keys with appropriate messages that inform users why location access is necessary: 
+
+```swift
+<key>NSLocationWhenInUseUsageDescription</key> 
+<string>We require your location to ensure compliance with regulatory requirements.</string> 
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key> 
+<string>Your location helps us to verify compliance status.</string> 
+```
+
+### **Requesting Location Permissions**
+
+Ensure your app requests location permissions when initialising the SDK. Implement the location permission prompt in the app as follows: 
+
+```swift
+import CoreLocation 
+
+let locationManager = CLLocationManager() 
+locationManager.requestWhenInUseAuthorization() 
+// or locationManager.requestAlwaysAuthorization() if needed 
+```
+
+### **1. Initialising the SDK**
+
+Before using the SDK, you need to initialise it with your API key and configuration. 
+
+#### **Configuration**
+
+Create an instance of the configuration and set the necessary properties: 
+
+```swift
+    let env: ACTSDKModel.Config.Level = .debug //or .production 
+    //Debug ENV will ignore simulator errors. 
+
+ 
+    let config = ACTSDKModel.Config() 
+        .setEnv(env) 
+        .baseURL("sandbox_url") //or production_url 
+
+        .build() 
+```
+
+#### **Installation**
+
+Install the SDK with your API key and the configuration: 
+
+```swift
+// Set the delegate for initialisation 
+    ACTGeoSDK.shared.setInitDelegate(self) 
+
+    ACTGeoSDK.shared.install(apiKey: "your_api_key", config: config) 
+```
+
+#### **Initialisation Delegate**
+
+Implement the **_ACTInitialiseDelegate_** to handle initialisation callbacks: 
+
+```swift
+extension YourViewController: ACTInitialiseDelegate { 
+     
+    func initialiseCompleted() { 
+        print("SDK initialisation completed successfully.") 
+        //SDK start can be called here 
+    } 
+     
+    func initialiseFailed(error: ACTSDKModel.InitError) { 
+        print("SDK initialisation failed with error: \(error.description)") 
+        switch error { 
+        case .apiKeyWrong: 
+            //Handle API key wrong error 
+        case .networkError: 
+            //Handle network error 
+            //Retry when network is available 
+        case .other(let message): 
+            //Contact support and reference message 
+            print("Errored with message: \(message)") 
+        } 
+    } 
+} 
+``` 
+
+### **2. Starting the On Demand Location Checks**
+
+Once the SDK is initialised, you can start the location checks by providing an account ID and setting the check delegate. 
+
+#### **Set the Check Delegate**
+
+Set the delegate to handle location check callbacks: 
+
+```swift
+ACTGeoSDK.shared.setCheckDelegate(self) 
+``` 
+
+#### **Start Checks** 
+
+Start the location checks with an optional account ID: 
+
+```swift
+ACTGeoSDK.shared.startChecks(delegate: self) 
+```
+ 
+#### **Check Delegate**
+
+Implement the ACTCheckDelegate to handle check events: 
+
+```swift
+extension NetworkManager: ACTCheckDelegate { 
+    func checksStarted() { 
+        print("Location checks started successfully.") 
+        // Perform any actions needed when checks start 
+    } 
+     
+    func checkStartFailed(error: ACTSDKModel.StartError) { 
+        print("Location checks failed to start with error: \(error.description)") 
+        // Handle the failure to start checks 
+        switch error { 
+            case .locationPermissions: 
+                //Request location permissions and try again. 
+            case .other(let message): 
+                // Contact support and reference the message 
+                print("Failed with Error: \(message)") 
+        } 
+    } 
+     
+    func locationStatusChanged() { 
+        print("Location status changed") 
+        // Perform a location status request to update the user interaction. 
+    } 
+} 
+``` 
+
+### **3. Requesting Location Status**
+
+You can request the current location status by calling the requestLocationStatus method. This method will return the result of LocationCheckResult via a completion handler. 
+
+```swift
+enum ReasonForLookup: Int { 
+    case login = 0 
+    case validate = 1 
+    case placeBet = 2 
+    case purchase = 3 
+    case deposit = 4 
+} 
+ 
+let accountID: String = "your_account_id" 
+let reasonForLookup: ReasonForLookup = .login 
+ 
+ACTGeoSDK.shared.requestLocationStatus(accountID, reasonForLookup.rawValue)  { result in 
+    switch result { 
+    case .locationSuccess(let location, let reference): 
+        // Handle location success 
+    case .locationOutside(let location, let reference): 
+        // Handle location outside 
+    case .unknownLocation: 
+        // Handle unknown location, should retry the request. 
+    case .monitoringNotRunning: 
+        // Handle monitoring not running, should start checks first. 
+    case .jailbroken(let location, let reference): 
+        // Handle jailbroken device 
+    case .simulatedBySoftware(let location, let reference): 
+        // Handle location simulated by software 
+    case .other(let location, let errorMessage, let reference): 
+        // Handle other cases 
+    case .none: break 
+    } 
+} 
+```
+
+### **4. Stopping the Checks**
+
+To stop the location monitoring, use the stopChecks method. 
+
+```swift
+ACTGeoSDK.shared.stopChecks() 
+```
+
+### **5. Starting the Time Based Location Checks**
+
+Once the SDK is initialised the developer can set time based checks as well. This feature allows developers to schedule repeated location checks at standardized intervals or custom intervals. 
+
+To start time-based checks, use the startTimeBasedChecks method: 
+
+```swift
+ACTGeoSDK.shared.startTimeBasedChecks(  
+  interval: 30, // Use predefined interval  
+  reasonForLookup: 1,  
+  onInterval: { result in  
+
+       let location = result.location 
+
+       switch result.type { 
+
+          case .locationSuccess: 
+
+             //handle success  
+
+          default: 
+
+             //handle issue (or map individual cases) 
+
+       } 
+       // Handle each interval result  
+  },  
+  onError: { error in  
+      // Handle error  
+  }  
+) 
+```
+
+### **Stopping Time-Based Checks**
+
+Stop the time based location checks with the stopTimeBasedChecks function: 
+
+```swift
+ACTGeoSDK.shared.stopTimeBasedChecks() 
+```
+
+## API Reference 
+
+### **ACTGeoSDK**
+
+#### **Properties**
+
+- `shared`: The singleton instance of ACTGeoSDK. 
+
+#### **Methods**
+- `install(apiKey:config:)`: Initialises the SDK with the provided API key and configuration. 
+    - ##### **Parameters:**
+    - `apiKey`: A String representing your API key. 
+    - `config`: An instance of ACTSDKModel.Config containing the configuration settings. 
+
+- `setInitDelegate(_:)': Sets the delegate to receive initialisation callbacks. 
+    - ##### **Parameters:**
+    - `delegate`: An instance of ACTInitialiseDelegate. 
+
+- `setCheckDelegate(_:)`: Sets the delegate to receive location check callbacks. 
+    - ##### **Parameters:**
+    - `delegate': An instance of ACTCheckDelegate. 
+
+- `startChecks(delegate:)`: Starts the location checks with an optional account ID and delegate 
+    - ##### **Parameters:**
+    - `delegate': An optional instance of ACTCheckDelegate. 
+
+- `requestLocationStatus(completion:)`: Requests the current location status. 
+    - ##### **Parameters:**
+    - `completion`: A closure that takes a String parameter representing the location status. 
+- `stopChecks()`: Stops the location monitoring. 
+
+### **Protocols**
+
+#### **ACTInitialiseDelegate**
+
+- `initialiseCompleted()`: Called when the SDK is initialised successfully. 
+- `initialiseFailed(error:)`: Called when the SDK initialisation fails. 
+    - ##### **Parameters:**
+    - `error`: An instance of ACTSDKModel.InitError representing the error that occurred. 
+
+#### **ACTCheckDelegate**
+
+- `checksStarted()': Called when the location checks start successfully. 
+- `checkStartFailed(error:)`: Called when the location checks fail to start. 
+    - ##### **Parameters:**
+    - `error`: An instance of ACTSDKModel.StartError representing the error that occurred. 
+- `locationStatusChanged()`: Called when there is a change in the device location status. 
+    - ##### **Parameters:**
+    - none 
+
+### **Enums**
+
+#### **ACTSDKModel.InitError**
+
+- `apiKeyWrong': Indicates an incorrect API key. 
+- `networkError': Indicates a network error. 
+- `other(message:)': Indicates other errors with a custom message.
+    - ##### **Description:** 
+    - `description': A String   
+
+#### **ACTSDKModel.StartError**
+
+- `jailbroken': Indicates the device is jailbroken. *TODO: remove next version 
+- `locationPermissions': Indicates location permissions are needed. 
+- `other(message:)': Indicates other errors with a custom message. 
+    - ##### **Description:** 
+    - `description': A String 
+
+#### **ACTSDKModel.LocationCheckResult**
+
+- `simulatedBySoftware(location:referenceID:)`: Indicates the location is simulated by software and provides a referenceID. 
+
+- `locationOutside(location:referenceID:)`: Indicates the location is outside the permitted area  and provides a referenceID. 
+
+- `locationSuccess(location:referenceID:)`: Indicates the location is verified successfully and provides a referenceID. 
+
+- `other(location:message:)`: Indicates other location results with a custom message  
+
+- `jailbroken(location:referenceID:)`: Indicates the device is jailbroken and provides a referenceID. 
