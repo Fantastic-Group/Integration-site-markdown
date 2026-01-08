@@ -1,0 +1,76 @@
+---
+title: Visão geral
+description: 'Bem-vindo à documentação do ACT Geosafe'
+icon: 'location-dot'
+---
+
+## Visão geral
+
+O ACT Geosafe integra-se aos seus aplicativos para fornecer um serviço de geolocalização perfeito.
+
+O Geosafe verifica a localização do seu cliente em qualquer ponto necessário. Essas verificações também incluem muitas ferramentas de detecção antifraude para garantir que seu cliente esteja dentro da jurisdição necessária para seu produto.
+
+As verificações antifraude também incluem monitoramento constante das ações e atividades de seus clientes para evitar invasões de conta e falsificação de usuários.
+
+Existem 2 tipos diferentes de verificações que você pode executar usando o ACT Geosafe SDK
+
+- **Verificações sob demanda** – para coisas como verificar onde um cliente está quando ele faz login, faz uma aposta, deposita dinheiro etc.
+
+- **Verificações contínuas** – para quando um cliente está jogando caça-níqueis e você precisa verificar constantemente sua localização, a frequência das verificações é configurável
+
+### Verificações sob demanda
+
+#### Inicializar
+
+A primeira chamada para o SDK é a chamada de inicialização. Isso requer uma chave de API para identificar quem você é e para qual jurisdição você está licenciado.
+
+#### Iniciar/Parar serviço de localização
+
+Depois que o SDK for inicializado, você pode iniciar os serviços de localização. Eles devem ser iniciados antes de você precisar verificar a localização de um cliente e interrompidos após você ter confirmado a localização dele:
+
+- **Login**
+Se a localização do seu cliente precisar ser verificada quando ele fizer login, você pode iniciar os serviços de localização quando ele entrar na tela de login e interromper os serviços de localização quando ele fizer login com sucesso.
+
+- **Fazer/Validar Apostas**
+Se a localização do seu cliente precisar ser verificada enquanto ele estiver fazendo apostas, você inicia os serviços de localização quando o cliente entrar na seção de apostas do seu aplicativo e pode verificar a localização dele sempre que ele validar ou fizer uma aposta, assim que o cliente sair da seção de apostas do seu aplicativo, você pode interromper o serviço de localização
+
+### Verificações sob demanda
+
+#### Inicializar
+
+A primeira chamada para o SDK é a chamada de Inicialização. Isso requer uma Chave de API para identificar quem você é e para qual Jurisdição você está licenciado.
+
+#### Iniciar/Parar verificações de localização baseadas em tempo
+
+Assim que o SDK for Inicializado, você pode iniciar os serviços de localização baseados em tempo. Eles devem ser iniciados antes de você precisar verificar a localização de um cliente e interrompidos após você ter confirmado a localização dele:
+
+- **Slots**
+Se a localização do seu cliente precisar ser verificada enquanto ele estiver jogando slots, você pode iniciar os serviços de localização baseados em tempo quando ele entrar na área do seu aplicativo onde os slots estão. Os serviços de localização baseados em tempo devem ser interrompidos quando ele sair dos slots
+
+### Solicitar localização
+
+Quando um local é verificado, o seguinte pode ser retornado
+
+- <span class="green">O cliente está dentro da jurisdição</span>
+
+- <span class="maroon">O cliente está fora da jurisdição</span>
+
+- <span class="maroon">O local é desconhecido (por exemplo, no meio do oceano) </span>
+
+- <span class="maroon">Os serviços de localização estão desabilitados no dispositivo do cliente </span>
+
+- <span class="maroon">O cliente adulterou seu dispositivo </span>
+
+- <span class="maroon">O cliente está tentando emular sua localização (por exemplo, usando uma VPN. Proxy) </span>
+
+- <span class="maroon">O cliente está tentando simular sua localização (por exemplo, usando software no dispositivo, usando um emulador) </span>
+
+- <span class="maroon">A conta do cliente foi bloqueada por você devido a atividade suspeita </span>
+
+- <span class="maroon">O dispositivo do cliente foi bloqueado por você devido a atividade suspeita </span>
+
+- <span class="maroon">O dispositivo do cliente foi colocado na lista negra e está bloqueado em todos os clientes ACT</span>
+
+- <span class="maroon">O cliente está usando um endereço IP que foi colocado na lista negra</span>
+
+A primeira resposta é a única que foi bem-sucedida, o resto são todas falhas

@@ -1,0 +1,25 @@
+---
+title: Visão geral
+description: 'Bem-vindo à documentação do ACT Verify'
+icon: 'location-dot'
+---
+
+## Visão geral
+
+Introdução ao ACT Verify a ser adicionada aqui
+
+#### Inicializar
+
+A primeira chamada para o SDK é a chamada de inicialização. Isso requer uma chave de API para identificar quem você é e para qual jurisdição você está licenciado.
+
+O cliente baixa o aplicativo ACT Verify para seu dispositivo móvel. Depois de instalado, ele deve escanear um código QR para inicializar o SDK – O código QR é gerado pelo ACT Verify e exibido em seu site.
+
+<img src="/images/act-verify.png" />
+
+#### Iniciar/Parar serviço de localização
+
+Após inicializar com sucesso o SDK com um código QR, use este método para iniciar um cronômetro de validação. Este cronômetro verifica se o usuário validou sua localização escaneando o código QR usando o aplicativo ACT Verify dentro do tempo limite especificado pelo servidor.
+
+<img class="mobile" src="/images/verify-app.png" />
+
+O cliente pode usar o botão Extend Session para reiniciar o relógio para que o Session Expires Time não acabe. Toda vez que o cliente estende sua sessão, sua localização é verificada novamente.

@@ -1,0 +1,535 @@
+---
+title: 'ACT Verify KYC Integration '
+description: 'The integration document for ACT Verify'
+icon: 'hat-wizard'
+---
+
+## Forms Integration 
+
+1. Customer will have a form created with appropriate configurations in his account. 
+
+2. The customer server sends a request for Get form URL. 
+
+3. The customer server receives a response of Get form URL request. 
+
+4. The applicant opens ACT form by URL that was received in response. 
+
+5. The applicant fills the form and submits data to the ACT server. 
+
+6. The ACT form receives response and shows a success message to the applicant. Also there is a possibility to redirect the applicant to the customer page. 
+
+7. Within 2 minutes to 6 hours, ACT server sends the verification webHook to the customer's server. 
+
+<CardGroup cols={1}>
+  <Card
+    title="Note"
+    icon="bell"
+  >
+    Verification takes from 2 minutes to 6 hours 
+  </Card>
+</CardGroup>
+
+### Request 
+
+<table border="0">
+  <tr>
+    <td valign="top">
+      URL:
+    </td>
+    <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td valign="top">
+      {base_URL}/GetFormUrl
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      URL Parameters:
+    </td>
+    <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td valign="top">
+      formName, referenceId, webHook
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Method:
+    </td>
+    <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td valign="top">
+      GET
+    </td>
+  </tr>
+</table>
+
+#### Request Example 
+
+```curl
+curl https:{base_url}/GetFormUrl?formName=Form1&referenceId=Test&webHook={url}s \ 
+    -H 'Api-Key: {API_TOKEN}' \ 
+    -X GET 
+```
+
+<table border="0">
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      formName
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (36)_<br />The name of the form to be retrieved.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      referenceId
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (50)_<br />Custom identifier of the applicant, which is intended for binding the applicant in the customer and ACT systems. 
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      webHook
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (2048)_<br />The customer webHook URL, where verification changes will be posted.
+    </td>
+  </tr>
+</table>
+
+### Response 
+
+If Response status 200: FormObject 
+
+## FormObject 
+
+<table>
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      message
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string Required_<br />Form URL. 
+    </td>
+  </tr>
+</table>
+
+#### Response structure 
+
+ 
+```json
+    { 
+        "message": "<form_url>" 
+    } 
+```
+ 
+#### Form language 
+
+For the setup of the initial language of form UI, you need to add URL parameter lang. 
+
+Possible values: 
+
+- az (Azerbaijani) 
+
+- bn (Bengali) 
+
+- de (German) 
+
+- en (English) 
+
+- es (Spanish) 
+
+- es-mx (Spanish(Mexico)) 
+
+- fr (French) 
+
+- he (Hebrew) 
+
+- hi (Hindi) 
+
+- kk (Kazakh) 
+
+- nl (Dutch) 
+
+- pl (Polish) 
+
+- pt (Portuguese) 
+
+- ro (Romanian) 
+
+- ru (Russian) 
+
+- tr (Turkish) 
+
+- uk (Ukrainian) 
+
+- uz (Uzbek) 
+
+- yi (Yiddish) 
+
+- zh (Chinese) 
+
+Example: https://forms.act-tech.com/65e5b4121d92424b9e3af5e443cca0d3b024/?lang=uk 
+
+#### If the form URL opens in an iframe 
+
+For the correct operation of the camera in the iframe, you need to add the attribute allow="microphone *;camera *;midi *;encrypted-media *;clipboard-read;clipboard-write;" to iframe. 
+
+The iframe size should not exceed screen size on mobile devices. 
+
+**postMessage** communication for **iframe solution** 
+
+A form triggers a cross-origin message when the applicant completed the form, only when a form was opened in an iframe. 
+
+Message format: 
+
+```json
+{ 
+
+    "event": "FORM_COMPLETED", 
+
+    "applicant_id": "{applicant_id}", 
+
+    "verification_id": "{verification_id}" 
+
+} 
+```
+
+If the form URL opens in iOS **WKWebView** 
+
+For the correct operation of the camera in the WKWebView, you need to setup allowsInlineMediaPlayback = true. 
+
+WKWebViewConfiguration is only used when a web view is first initialized. You cannot use this class to change the web view's configuration after it has been created. 
+
+### VERIFICATION_STATUS_CHANGED 
+
+<table>
+  <tr>
+    <td valign="top">
+      URL:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      {callback_url}
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Content-Type:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      application/json
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Method:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      POST
+    </td>
+  </tr>
+</table>
+
+KYC server will send callback request to customer server, once verification status will be changed. Verify callback will be in the JSON format and they will contain the following object parameters: 
+
+<table>
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      StatusType
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string Required_<br />VERIFICATION_STATUS_CHANGED - type of callback 
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      FormId
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (36) Required_<br />Form id. 
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      VerificationId
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (36) Required_<br />The verification’s unique identificator.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Status
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (9) Required_<br />Status of verification. Possible values:<br />
+
+      **unused** - the applicant has not yet filled out a form<br />
+
+      **pending** - verification of the applicant in progress<br />
+
+      **completed** - verification is completed  
+    </td>
+  </tr>
+</table>
+
+### VERIFICATION_COMPLETED 
+
+<table>
+  <tr>
+    <td valign="top">
+      URL:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      {webHook_url}
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Content-Type:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      application/json
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Method:
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      POST
+    </td>
+  </tr>
+</table>
+
+KYC server will send verification result request to customer server based on webHook_url parameter that was set in Form URL, once verification will be completed. Verify callback will be in the JSON format and they will contain the following format: 
+
+<table>
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      StatusType
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string Required_<br />Type of callback. Possible types:<br />
+      VERIFICATION_COMPLETED - the type of callback that notifies about the end of verification.  
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      FormId
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (36) Required_<br />Form id. 
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      VerificationId
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (36) Required_<br />The verification’s unique identificator.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Status
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (9) Required_<br />Status of verification. Possible values:<br />
+      **unused** - the applicant has not yet filled out a form<br />
+      **pending** - verification of the applicant in progress<br />
+      **completed** - verification is completed  
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Verified
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _boolean Required_<br />Result of verification. Possible values:<br />
+      **true** - the applicant passed verification<br />
+      **false** - the applicant failed verification
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      Verifications 
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _Verifications List Required<br />
+      Verifications List object  
+    </td>
+  </tr>
+</table>
+
+### VerificationsList 
+
+<table>
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      profile | document | facial | address | aml | financial | payment_method | tax_id | database_screening | company
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _VerificationResult_ Required <br />
+      VerificationResult object  
+    </td>
+  </tr>
+</table>
+
+
+### VerificationResult 
+<table>
+  <tr>
+    <td valign="top">
+      **Parameter**
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      **Description**
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      verified
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _boolean Required_<br />Result of particular verification. Possible values: <br />
+      **true** - the verification passed <br />
+      **false** - the verification failed   
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      comment
+    </td>
+    <td valign="top">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td valign="top">
+      _string (255)_<br />
+      Accompanying verification comment. May not always be provided.    
+    </td>
+  </tr>
+</table>

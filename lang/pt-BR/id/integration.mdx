@@ -1,0 +1,533 @@
+---
+title: 'Integração ACT ID '
+description: 'O documento de integração para ACT ID'
+icon: 'hat-wizard'
+---
+
+## Integração de formulários
+
+1. O cliente terá um formulário criado com as configurações apropriadas em sua conta.
+
+2. O servidor do cliente envia uma solicitação para Obter URL do formulário.
+
+3. O servidor do cliente recebe uma resposta da solicitação Obter URL do formulário.
+
+4. O requerente abre o formulário ACT pela URL que foi recebida em resposta.
+
+5. O requerente preenche o formulário e envia dados para o servidor ACT.
+
+6. O formulário ACT recebe a resposta e mostra uma mensagem de sucesso para o requerente. Também há a possibilidade de redirecionar o requerente para a página do cliente.
+
+7. Dentro de 10 Sekunden bis 15 Minuten, o servidor ACT envia o webhook de verificação para o servidor do cliente.
+
+<CardGroup cols={1}>
+<Card
+title="Nota"
+icon="sino"
+>
+A verificação leva de 10 Sekunden bis 15 Minuten
+</Card>
+</CardGroup>
+
+### Solicitação
+
+<table border="0">
+<tr>
+<td valign="top">
+URL:
+</td>
+<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td valign="top">
+{base_URL}/GetFormUrl
+</td>
+</tr>
+<tr>
+<td valign="top">
+Parâmetros de URL:
+</td>
+<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td valign="top">
+formName, referenceId, webHook
+</td>
+</tr>
+<tr>
+<td valign="top">
+Método:
+</td>
+<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td valign="top">
+GET
+</td>
+</tr>
+</table>
+
+#### Exemplo de solicitação
+
+```curl
+curl https:{base_url}/GetFormUrl?formName=Form1&referenceId=Test&webHook={url}s \
+-H 'Api-Key: {API_TOKEN}' \
+-X GET
+```
+
+<table border="0">
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+formName
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (36)_<br />O nome do formulário a ser recuperado.
+</td>
+</tr>
+<tr>
+<td valign="top">
+referenceId
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (50)_<br />Identificador personalizado do requerente, que se destina a vincular o requerente nos sistemas do cliente e do ACT.
+</td>
+</tr>
+<tr>
+<td valign="top">
+webHook
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (2048)_<br />A URL do webHook do cliente, onde as alterações de verificação serão publicadas.
+</td>
+</tr>
+</table>
+
+### Resposta
+
+Se o status da resposta for 200: FormObject
+
+## FormObject
+
+<table>
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+mensagem
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string Obrigatório_<br />URL do formulário.
+</td>
+</tr>
+</table>
+
+#### Estrutura de resposta
+
+```json
+{
+"message": "<form_url>"
+}
+```
+
+#### Linguagem do formulário
+
+Para a configuração da linguagem inicial da IU do formulário, você precisa adicionar o parâmetro de URL lang.
+
+Valores possíveis:
+
+- az (Azerbaijano)
+
+- bn (Bengali)
+
+- de (Alemão)
+
+- en (Inglês)
+
+- es (Espanhol)
+
+- es-mx (Espanhol (México))
+
+- fr (Francês)
+
+- he (Hebraico)
+
+- hi (Hindi)
+
+- kk (Cazaque)
+
+- nl (Holandês)
+
+- pl (Polonês)
+
+- pt (Português)
+
+- ro (Romeno)
+
+- ru (Russo)
+
+- tr (Turco)
+
+- uk (Ucraniano)
+
+- uz (Uzbeque)
+
+- yi (Iídiche)
+
+- zh (Chinês)
+
+Exemplo: https://forms.act-tech.com/65e5b4121d92424b9e3af5e443cca0d3b024/?lang=uk
+
+#### Se a URL do formulário abrir em um iframe
+
+Para a operação correta da câmera no iframe, você precisa adicionar o atributo allow="microphone *;camera *;midi *;encrypted-media *;clipboard-read;clipboard-write;" ao iframe.
+
+O tamanho do iframe não deve exceder o tamanho da tela em dispositivos móveis.
+
+Comunicação **postMessage** para **solução iframe**
+
+Um formulário dispara uma mensagem de origem cruzada quando o candidato preenche o formulário, apenas quando um formulário é aberto em um iframe.
+
+Formato da mensagem:
+
+```json
+{
+
+"event": "FORM_COMPLETED",
+
+"applicant_id": "{applicant_id}",
+
+"verification_id": "{verification_id}"
+
+}
+```
+
+Se a URL do formulário abrir no iOS **WKWebView**
+
+Para a operação correta da câmera no WKWebView, você precisa configurar allowsInlineMediaPlayback = true.
+
+WKWebViewConfiguration é usado somente quando uma visualização da web é inicializada pela primeira vez. Você não pode usar esta classe para alterar a configuração da visualização da web após ela ter sido criada.
+
+### VERIFICATION_STATUS_CHANGED
+
+<table>
+<tr>
+<td valign="top">
+URL:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+{callback_url}
+</td>
+</tr>
+<tr>
+<td valign="top">
+Content-Type:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+application/json
+</td>
+</tr>
+<tr>
+<td valign="top">
+Método:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+POST
+</td>
+</tr>
+</table>
+
+O servidor KYC enviará uma solicitação de retorno de chamada ao servidor do cliente, uma vez que o status da verificação será alterado. Verifique se o retorno de chamada estará no formato JSON e conterá os seguintes parâmetros de objeto:
+
+<table>
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+StatusType
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string Required_<br />VERIFICATION_STATUS_CHANGED - tipo de retorno de chamada
+</td>
+</tr>
+<tr>
+<td valign="top">
+FormId
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (36) Required_<br /> ID do formulário.
+</td>
+</tr>
+<tr>
+<td valign="top">
+VerificationId
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (36) Required_<br /> O identificador exclusivo da verificação.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Status
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (9) Required_<br />Status da verificação. Valores possíveis:<br />
+
+**unused** - o requerente ainda não preencheu um formulário<br />
+
+**pending** - verificação do requerente em andamento<br />
+
+**completed** - verificação concluída
+</td>
+</tr>
+</table>
+
+### VERIFICAÇÃO_COMPLETA
+
+<table>
+<tr>
+<td valign="top">
+URL:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+{webHook_url}
+</td>
+</tr>
+<tr>
+<td valign="top">
+Tipo de conteúdo:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+application/json
+</td>
+</tr>
+<tr>
+<td valign="top">
+Método:
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+POST
+</td>
+</tr>
+</table>
+
+O servidor KYC enviará uma solicitação de resultado de verificação ao servidor do cliente com base no parâmetro webHook_url que foi definido no URL do formulário, assim que a verificação for concluída. O retorno de chamada de verificação estará no formato JSON e conterá o seguinte formato:
+
+<table>
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+StatusType
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string Obrigatório_<br />Tipo de retorno de chamada. Tipos possíveis:<br />
+VERIFICATION_COMPLETED - o tipo de retorno de chamada que notifica sobre o fim da verificação.
+</td>
+</tr>
+<tr>
+<td valign="top">
+FormId
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (36) Required_<br /> ID do formulário.
+</td>
+</tr>
+<tr>
+<td valign="top">
+VerificationId
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (36) Required_<br /> O identificador exclusivo da verificação.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Status
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (9) Required_<br />Status da verificação. Valores possíveis:<br />
+**unused** - o requerente ainda não preencheu um formulário<br />
+**pending** - verificação do requerente em andamento<br />
+**completed** - verificação concluída
+</td>
+</tr>
+<tr>
+<td valign="top">
+Verificado
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_boolean Required_<br />Resultado da verificação. Valores possíveis:<br />
+**true** - o candidato passou na verificação<br />
+**false** - o candidato falhou na verificação
+</td>
+</tr>
+<tr>
+<td valign="top">
+Verificações
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_Lista de verificações necessária<br />
+Objeto da lista de verificações
+</td>
+</tr>
+</table>
+
+### Lista de verificações
+
+<table>
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+perfil | documento | facial | endereço | aml | financeiro | método_de_pagamento | id_de_imposto | triagem_de_banco_de_dados | empresa
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_VerificationResult_ Obrigatório <br />
+Objeto VerificationResult
+</td>
+</tr>
+</table>
+
+### VerificationResult
+<table>
+<tr>
+<td valign="top">
+**Parâmetro**
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+**Descrição**
+</td>
+</tr>
+<tr>
+<td valign="top">
+verificado
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_boolean Required_<br />Resultado de uma verificação específica. Valores possíveis: <br />
+**true** - a verificação passou <br />
+**false** - a verificação falhou
+</td>
+</tr>
+<tr>
+<td valign="top">
+comment
+</td>
+<td valign="top">
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td valign="top">
+_string (255)_<br />
+Comentário de verificação que acompanha. Nem sempre pode ser fornecido.
+</td>
+</tr>
+</table>

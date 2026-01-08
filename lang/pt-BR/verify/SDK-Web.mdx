@@ -1,0 +1,213 @@
+---
+title: 'Integração SDK (Web)'
+description: 'O documento de integração da Web para o ACT Geosafe SDK'
+icon: 'globe'
+---
+
+O **_ActGeo Web SDK_** é uma biblioteca projetada para lidar com validação de localização e gerenciamento de sessão para aplicativos web e móveis. Ele permite que você solicite permissões de localização, gere tokens de sessão com códigos QR, envie dados de localização para um servidor e valide a localização do usuário.
+
+## **Instalação**
+
+Para usar o SDK no seu projeto, você precisa instalá-lo localmente via npm ou yarn.
+
+### **1.Instalar via npm:**
+
+```bash
+npm install actgeowebsdk
+```
+
+### **2. Adicione ao seu arquivo HTML (para uso direto no navegador):**
+
+```html
+<script src="path/to/actgeowebsdk/actgeo-web-sdk.js"></script>
+```
+
+## **Uso**
+
+Após a instalação, você pode inicializar e usar o SDK em seu aplicativo da seguinte maneira:
+
+### **Inicializar SDK Obter ID de sessão e código QR**
+
+O primeiro passo é inicializar o SDK com uma chave de API e a URL base do seu servidor. Este passo é obrigatório antes de usar quaisquer outros métodos.
+
+```javascript
+ActGeo.InitSDKWithConfiguration(config);
+```
+
+### **Métodos**
+
+---
+
+### **1. `InitSDKWithConfiguration(config)`**
+
+#### **Descrição**:
+
+Este método inicializa o SDK com a chave de API fornecida, URL base e accountId para fazer chamadas de API.
+
+#### **Parâmetros**:
+
+- `apiKey` (string): Sua chave de API. (Obrigatório)
+- `baseUrl` (string): A URL base para sua API. (Obrigatório)
+- `accountId` (string): A URL base para sua API. (Opcional)
+- `location` (object): A URL base para sua API. (Opcional)
+  - `Latitude` (number): Coordenada de latitude.
+  - `Longitude` (number): Coordenada de longitude.
+- `enableLogging` (bool): habilitar registro. o padrão é falso. (Opcional)
+
+#### **Devoluções**:
+
+- A promise that resolves to the server’s sdk initialization response, usually a JSON object containing sdk initialization information.
+
+##### **Objeto de resposta**
+
+- `status` (number): Indica o status da resposta da API. (0 para sucesso).
+- `sessionId` (string): Um identificador exclusivo para a sessão.
+- `expiryTime` (number): O tempo de expiração da sessão em formato de registro de data e hora.
+- `qrCode` (string): Dados de imagem Base64 de código QR.
+
+#### **Uso**:
+
+```javascript
+const config = {
+  apiKey: "your_api_key", // Required
+  baseUrl: "https://your.server.base.url", // Required
+  accountId: "Acc0001", // Optional
+  location: { Latitude: 37.7749, Longitude: -122.4194 }, // Optional
+  enableLogging: true, // Optional, default is false
+};
+
+ActGeo.InitSDKWithConfiguration(config)
+  .then((data) => {
+    if (data) {
+      console.log("SDK Initialized With:", data);
+    } else {
+      console.log("SDK Initialized Failed");
+    }
+  })
+  .catch((error) => {
+    console.error("Error in sdk initialization:", error);
+  });
+```
+
+---
+
+### **2. `StartLocationValidation()`**
+
+#### **Descrição**:
+
+Após inicializar com sucesso o SDK com um QR Code, use este método para iniciar um timer de validação. Este timer verifica se o usuário validou sua localização escaneando o QR code usando o ActVerify App dentro do tempo limite especificado pelo servidor.
+
+#### **Parâmetros**:
+
+- `onSuccess` (Function): Função de retorno de chamada que é invocada quando a validação de localização é bem-sucedida. Recebe os dados de localização validados como um argumento.
+- `onFailure` (Function): Função de retorno de chamada que é invocada quando a validação falha ou o timer atinge o timeout. Recebe uma mensagem de string como argumento.
+
+#### **Devoluções**:
+
+- `onSuccess` retorno de chamada retorna uma promessa que resolve para um objeto contendo detalhes da sessão se a validação for bem-sucedida.
+
+##### **Objeto de resposta**
+
+- `status` (number): Indica o status da sessão. (1 para pendente, 2 para sucesso, 3 para falha, 4 para expirado, 9 para parâmetro de ID de sessão ausente, 12 para erro de backend, 42 para ID de sessão ausente).
+- `expiryTime` (number): O tempo de expiração da sessão em formato de registro de data e hora.
+
+#### **Uso**:
+
+```javascript
+ActGeo.StartLocationValidation(
+  (data) => {
+    console.log("Validation successful!", data);
+  },
+  (error) => {
+    console.error("Validation failed:", error);
+  }
+);
+```
+
+---
+
+### **3. `RequestSessionCheck()`**
+
+#### **Descrição**:
+
+O método `RequestSessionCheck` é usado para verificar o status atual de uma sessão de usuário com o servidor.
+
+#### **Devoluções**:
+
+- Uma promessa que se resolve em um objeto contendo detalhes da sessão se a sessão for válida.
+
+#### **Uso**:
+
+```javascript
+ActGeo.RequestSessionCheck()
+  .then((sessionDetails) => {
+    console.log("Session details:", sessionDetails);
+  })
+  .catch((error) => {
+    console.error("Failed to check session status:", error.message);
+  });
+```
+
+---
+
+### **4. `StopLocationValidation()`**
+
+#### **Descrição**:
+
+O método `StopLocationValidation` é usado para parar o timer de validação se ele estiver em execução no momento. Isso é particularmente útil quando o usuário quer forçar a parada do processo de validação de localização em andamento antes que o timer seja concluído.
+
+#### **Uso**:
+
+```javascript
+ActGeo.StopLocationValidation();
+```
+
+---
+
+### **5. `RequestForLocationPermission()`**
+
+#### **Descrição**:
+
+Solicita permissão de localização do navegador do usuário. Este método é opcional e fornecido como uma conveniência para clientes que preferem usar a implementação interna da biblioteca. Os clientes podem lidar com a permissão de localização da sua própria maneira, se desejarem.
+
+#### **Devoluções**:
+
+- Uma promessa que resolve o objeto de localização se a permissão for concedida ou rejeita com `false` se a permissão for negada.
+
+#### **Uso**:
+
+```javascript
+ActGeo.RequestForLocationPermission()
+  .then((permissionGrantedWithCoordinate) => {
+    if (permissionGrantedWithCoordinate) {
+      console.log("Location permission granted");
+    } else {
+      console.log("Location permission denied");
+    }
+  })
+  .catch((error) => {
+    console.error("Error requesting location permission:", error);
+  });
+```
+
+---
+
+## **Tratamento de erros**
+
+O SDK usa **Promises** para métodos assíncronos. Se ocorrer um erro durante qualquer operação, ele será lançado e deverá ser tratado pelo cliente. Por exemplo:
+
+```javascript
+ActGeo.ValidateSessionStatus()
+  .then((validationStatus) => {
+    console.log("Location validated status:", validationStatus);
+  })
+  .catch((error) => {
+    console.error("Error validating location:", error);
+  });
+```
+
+---
+
+## **Licença**
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.

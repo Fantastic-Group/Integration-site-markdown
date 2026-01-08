@@ -1,0 +1,176 @@
+---
+title: 'Integração do SDK (Android)'
+description: 'O documento de integração Android para o ACT Geosafe SDK'
+icon: 'android'
+---
+
+Versão do Documento: 0.1 pt
+
+Versão do SDK: 1.1
+
+Suporta Versão do Android: 6+
+
+## **Visão Geral**
+
+**_ACTGeoSDK_** é um SDK Android projetado para fins de conformidade. Este SDK garante que a localização do usuário final esteja em conformidade com os requisitos regulatórios, realizando verificações e fornecendo o feedback necessário para o seu aplicativo.
+
+## **Integração**
+
+### **Integração Manual**
+
+#### **1. Baixe o SDK**
+
+Obtenha a versão mais recente do **_ACTGeoSDK_** da Fantastic Tech.
+
+#### **2. Adicione o SDK ao Seu Projeto**
+
+- Salve o arquivo .aar baixado na pasta lib do módulo do aplicativo (geralmente localizada em `app/libs`. Se não existir, crie a pasta `lib` dentro da pasta `app`).
+- Abra o arquivo `build.gradle` do módulo do aplicativo (geralmente encontrado em `app/build.gradle`).
+- Na seção de dependências, adicione a seguinte linha:
+
+```gradle
+implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar")))) 
+```
+
+- Como o SDK está incluído como um arquivo `.aar`, é necessário adicionar manualmente as dependências utilizadas caso ainda não estejam presentes:
+
+```gradle
+// Android 
+implementation(libs.androidx.core.ktx) 
+implementation(libs.androidx.appcompat) 
+implementation(libs.androidx.arch.coretesting) 
+implementation(libs.kotlin.coroutine) 
+implementation(libs.kotlin.coroutinetest) 
+implementation(libs.material) 
+
+// Play Services 
+implementation(libs.playservices.core) 
+implementation(libs.playservices.location) 
+
+// Retrofit 
+implementation(libs.retrofit) 
+implementation(libs.retrofit.converter.gson) 
+implementation(libs.okhttp) 
+```
+
+- Para fins de teste, você também pode adicionar as seguintes dependências:
+
+```gradle
+// JUnit 
+testImplementation(libs.junit) 
+
+androidTestImplementation(libs.androidx.espresso.core) 
+androidTestImplementation(libs.junit.ext) 
+
+// Mockito 
+testImplementation(libs.mockito.core) 
+testImplementation(libs.mockito.kotlin) 
+testImplementation(libs.mockk) 
+```
+
+- Clique em **Sync Now** no topo ou selecione **File/Sync Gradle files** para garantir que todas as dependências do Gradle estejam sincronizadas.
+
+### **Importe o SDK**
+
+Importe as classes necessárias nos arquivos onde você precisa utilizar o SDK.
+
+## **Uso**
+
+### **1. Configuração do SDK**
+
+Você pode configurar o SDK de duas maneiras:
+
+#### **Via** AndroidManifest.xml:
+
+Adicione seus valores de configuração ao arquivo de manifesto (`app/src/main/AndroidManifest.xml`):
+
+```xml
+<meta-data 
+     android:name="com.fantastic.sdk.API_KEY" 
+     android:value="SUA_CHAVE_DE_API_AQUI" 
+ /> 
+  
+<meta-data 
+     android:name="com.fantastic.sdk.BASE_URL" 
+     android:value="SEU_BASE_URL_AQUI" 
+ /> 
+  
+<meta-data 
+     android:name="com.fantastic.sdk.ACCOUNT_ID" 
+     android:value="SEU_ACCOUNT_ID_AQUI" 
+ /> 
+```
+
+#### **Via Injeção de Código:**
+
+Você também pode injetar a configuração diretamente ao inicializar a instância do **LocationHandler** usando os métodos **getInstance**:
+
+```kotlin
+ApiKeyHolder.apply {
+    apiKey = "SUA_CHAVE_DE_API"
+    baseUrl = "https://api.exemplo.com"
+    accountId = "SEU_ACCOUNT_ID" // Opcional
+    tokenLifespan = 30 // Opcional
+}
+val locationHandler = LocationHandler.getInstance(
+    context = applicationContext,
+    apiKeyHolder = ApiKeyHolder
+)
+```
+
+### **2. Criar Instância do LocationHandler**
+
+Crie a instância do **LocationHandler** no seu ViewModel ou código do aplicativo com base na abordagem de configuração escolhida.
+
+- Utilizando **Configuração no Manifesto**:
+
+```kotlin
+private val locationHandler = LocationHandler.getInstance(applicationContext)  
+```
+
+- Utilizando um **Objeto API Key Holder**:
+
+```kotlin
+ApiKeyHolder.apply {
+    apiKey = "SUA_CHAVE_DE_API"
+    baseUrl = "https://api.exemplo.com"
+    accountId = "SEU_ACCOUNT_ID" // Opcional
+    tokenLifespan = 30 // Opcional
+}
+private val locationHandler = LocationHandler.getInstance(
+    context = applicationContext,
+    apiKeyHolder = ApiKeyHolder
+)
+```
+
+### **3. Inicializar o SDK**
+
+A função **initialize** é utilizada para inicializar o SDK e garantir que ele esteja pronto para uso. Esta função é executada assincronamente e notifica o chamador quando o processo de inicialização for concluído.
+
+```kotlin
+fun initialize(callback: (isInitialized: Boolean) -> Unit)
+```
+
+##### **Parâmetros**
+
+- `callback: (isInitialized: Boolean) -> Unit`: Uma função de retorno de chamada que é invocada quando o processo de inicialização é concluído.
+
+##### **Uso**
+
+Chame o método **initialize** no início do seu aplicativo ou ao preparar o SDK para uso. Utilize a função de retorno para verificar se a inicialização foi bem-sucedida.
+
+```kotlin
+locationHandler.initialize { isInitialized ->
+    if (isInitialized) {
+        println("SDK inicializado com sucesso!")
+        // Prossiga com o uso do SDK  
+    } else {
+        println("Falha ao inicializar o SDK.")
+        // Lide com a falha de inicialização  
+    }
+}
+```
+
+---
+
+Isso cobre a primeira parte da documentação. Deseja que eu continue com a tradução do restante?

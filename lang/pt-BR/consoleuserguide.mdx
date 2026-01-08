@@ -1,0 +1,573 @@
+---
+title: 'Console de administração'
+description: 'Guia do usuário para o portal de administração ACT-Geo'
+icon: 'book-open-cover'
+---
+ 
+VERSÃO: 0.1
+
+## Visão geral 
+
+### Acesso ao Portal
+
+#### Endereço da Web
+
+O Portal de Administração ACT-GeoSafe pode ser encontrado no seguinte Endereço:
+
+https://sandbox.advancedcompliance.tech/login
+
+#### Login
+
+Para efetuar login no Portal, use as credenciais enviadas a você por e-mail – se você não recebeu um e-mail, entre em contato com support@fantastic.tech
+
+## Painel
+
+### Visualização do Mapa
+
+<img height="250" src="/images/console-screen-shot.png" />
+
+O Painel do Portal do Administrador permite que você visualize dados de pesquisa geograficamente por meio de um mapa – a partir dele, você pode identificar rapidamente quaisquer padrões/problemas que possa ter com seus clientes validando sua localização.
+
+Há quatro seções na tela Visualização do Mapa
+
+- **Mapa**<br />
+Esta seção detalha a representação geográfica das pesquisas para o dia atual
+
+- **Atividade**<br />
+Esta seção exibe um gráfico de pizza mostrando o número total de pesquisas que ocorreram na data selecionada. As pesquisas feitas dentro da região são representadas por verde e as pesquisas que falham ou estão fora são representadas por vermelho.
+
+- **Dispositivos**<br />
+Esta seção exibe um gráfico de pizza mostrando o número total de pesquisas, divididas por tipo de dispositivo, na data especificada.
+
+- **3 principais motivos para falha**<br />
+Este gráfico mostra os três principais motivos para pesquisas malsucedidas e os divide pelo motivo pelo qual falharam – Para visualizar todas as falhas, clique no link 3 principais motivos para falha
+
+Filtros de dados
+
+Existem 3 filtros que podem ser aplicados ao mapa, eles estão disponíveis no canto superior esquerdo do mapa:
+
+## Respostas de pesquisa
+<table border="0">
+<tr>
+<td>
+<img src="/images/pointers/pointer 0 Success.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização interna</b><br />
+Isso é retornado se o dispositivo solicitar uma localização dentro da jurisdição designada
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 3 Location Outside.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização externa</b><br />
+Isso é retornado pelo middleware quando ele detecta que o dispositivo está fora da localização
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 2 Unsupported Location.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Dispositivo não suportado</b><br />
+Isso é retornado quando o SDK detecta que o dispositivo não suporta GPS
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 1 Unknown Location.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização desconhecida</b><br />
+Isso é retornado se o dispositivo solicitar uma verificação de localização antes que o serviço tenha iniciado completamente e, portanto, não temos uma localização atual para o dispositivo.
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 5 Disabled.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização desabilitada</b><br />
+Isso é retornado quando o SDK detecta que o dispositivo desabilitou seu GPS
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 6 Jailbroken.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Dispositivo modificado</b><br />
+Isso é retornado se o SDK detecta que o dispositivo está com jailbreak
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 7 Simulated By Software.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização simulada por software</b><br />
+Isso é retornado se o SDK detectar que a localização é simulada por software (por exemplo, FakeGPS)
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 8 Undetermined Middleware.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Localização indeterminada</b><br />
+Nunca deve acontecer – ocorre quando temos uma configuração ruim no banco de dados para esse aplicativo e não conseguimos determinar se ele está dentro ou não
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 9 Developer Mode.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Developer Mode</b><br />
+Isso é retornado se o SDK detectar que o dispositivo está sendo executado no modo de desenvolvedor
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 10 Device Blocked.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Device Blocked</b><br />
+Isso é retornado se o sistema de backend encontrar este dispositivo em uma lista de contas bloqueadas
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 11 Account Blocked.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Conta bloqueada</b><br />
+Isso é retornado se o sistema de backend encontrar essa conta em uma lista de contas bloqueadas
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 13 Device Blocked Globally.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Bloqueado globalmente</b><br />
+Isso é retornado quando o middleware detecta que o dispositivo está na lista de bloqueados globais do GeoSafe, o que significa que o dispositivo está bloqueado em todas as jurisdições
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 12 Proxy Detected.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Proxy Detected</b><br />
+Isso é retornado se o sistema de backend determinar que este dispositivo está executando uma VPN
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="/images/pointers/pointer 4 Other.png" />
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<b>Other</b><br />
+Qualquer outro motivo além dos listados
+</td>
+</tr>
+</table>
+
+## Gráficos de pizza
+
+Há 3 gráficos de pizza diferentes disponíveis no painel principal.
+
+<table>
+<tr>
+<td>
+<img src="/images/Pie1.png" />
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td>
+<b>Atividade</b><br />
+Este gráfico mostra o número total de pesquisas que ocorreram para essa região. As pesquisas feitas dentro da região são representadas por verde e as pesquisas fora são representadas por vermelho.
+</td>
+</tr>
+<tr>
+<td>
+<img src="/images/Pie2.png" />
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td>
+<b>Dispositivos</b><br />
+Este gráfico mostra a divisão das pesquisas feitas por tipo de dispositivo (iOS, Android e Web) para a região selecionada
+</td>
+</tr>
+<tr>
+<td>
+<img src="/images/Pie3.png" />
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+<td>
+<b>3 principais motivos para falha</b><br />
+Este gráfico mostra a proporção de pesquisas malsucedidas e as divide pelo motivo pelo qual falharam – para visualizar todos os motivos pelos quais as pesquisas falharam, clique no link 3 principais motivos para falha
+</td>
+</tr>
+</table>
+
+<table>
+  <tr>
+    <td><img height="250" src="/images/pin-info.png" /></td>
+  </tr>
+</table>
+
+Para visualizar informações sobre uma transação específica, clique no alfinete para abrir a caixa de diálogo acima. As informações exibidas estão listadas abaixo:
+
+- **Data e hora**
+Data e hora em que a pesquisa ocorreu
+
+- **ID do dispositivo**
+ID do dispositivo
+
+- **ID da conta** ID da conta do cliente
+
+- **ID da transação** ID exclusivo da pesquisa
+
+- **Latitude e longitude** Detalhes do local
+
+- **Motivo da falha** Disponível somente se a pesquisa não for bem-sucedida ou estiver fora. Isso exibe o motivo da falha da pesquisa.
+
+- **Motivo da pesquisa** Isso exibe o motivo da ocorrência da pesquisa (por exemplo, o cliente estava fazendo login ou fazendo uma aposta)
+
+Para acessar a página de informações do dispositivo para esta pesquisa, clique no link Exibir todas as atividades do dispositivo, isso mostrará todos os detalhes no sistema para este dispositivo.
+
+## Visualização da transação
+<table>
+  <tr>
+    <td><img src="/images/transactions.png" /></td>
+  </tr>
+</table>
+
+A visualização de transações exibe todas as pesquisas que correspondem ao filtro definido.
+
+Os dados disponíveis na Visualização de lista são os seguintes:
+
+- **ID da conta** ID da conta do cliente, este é um link e se você clicar nele a página de informações da conta abre detalhando todas as informações sobre essa conta
+
+- **ID do dispositivo** ID do dispositivo, este é um link e se você clicar nele a página de informações do dispositivo abre detalhando todas as informações sobre esse dispositivo
+
+- **Data e hora** Data e hora em que a pesquisa ocorreu
+
+- **Resultado da pesquisa** Isso exibe o resultado da pesquisa – Sucesso ou o motivo da falha da pesquisa.
+
+- **ID da transação** ID de pesquisa exclusivo
+
+- **Latitude e longitude** Detalhes do local
+
+- **Motivo da pesquisa** Isso exibe o motivo da pesquisa (por exemplo, o cliente estava fazendo login ou fazendo uma aposta)
+
+Você pode manipular ainda mais os dados usando os seguintes recursos
+
+- **Colunas** Use este recurso para selecionar quais colunas deseja visualizar. Ao clicar nesta opção, você verá uma lista de todas as colunas com caixas de seleção ao lado delas. Use a caixa de seleção para ativar e desativar a coluna.
+
+- **Filtros** Use o recurso Filtros para filtrar ainda mais os resultados. Ao clicar nesta opção, você verá o seguinte:
+
+Use o seletor Colunas para escolher a coluna que deseja filtrar ainda mais
+
+Use o menu suspenso Operador para selecionar como deseja filtrar a coluna escolhida
+
+Finalmente, digite o valor pelo qual deseja filtrar a coluna escolhida.
+
+- **Densidade** Para alterar a altura das linhas, você pode usar o recurso de densidade:
+ 
+Existem 3 opções diferentes:
+
+<table>
+  <tr>
+    <td>Compact</td>
+    <td>Standard</td> 
+    <td>Comfortable</td>
+  </tr>
+  <tr>
+    <td><img src="/images/pie3.png" /></td>
+    <td><img src="/images/pie3.png" /></td> 
+    <td><img src="/images/pie3.png" /></td>
+  </tr>
+</table>
+
+- **Export**
+Use the Export feature to download the data as a Comma-Separated Variables (CSV) file or print them out 
+
+When you hover your mouse over each column header, two buttons appear on it: 
+
+ 
+
+- **Ordenar/Classificar**
+
+Se você clicar na seta ao lado do título, ela classificará a data na coluna selecionada – se a seta estiver apontando para baixo, ela classificará os dados em ordem crescente, se a seta estiver apontando para cima, ela classificará os dados em ordem decrescente
+
+- **Menu de recursos**
+
+Se você clicar neste botão, ele abrirá o menu de recursos. Ele contém várias opções que permitem que você manipule os dados nesta coluna.
+
+- **Classificar por ASC** Isso classifica a coluna em ordem crescente
+
+- **Classificar por DESC** Isso classifica a coluna em ordem decrescente
+
+- **Filtrar** Isso abre o recurso de filtro com o nome da coluna já preenchido
+
+- **Ocultar coluna** Isso oculta a coluna selecionada
+
+- **Gerenciar colunas** Isso abre o recurso Colunas e permite que você ative e desative as colunas
+
+## Atualizar (Automático)
+
+Se desejar atualizar/atualizar os dados no Painel, clique nas setas no canto superior direito dos dados, ao lado do último horário de atualização.
+
+Você pode ativar as "Atualizações automáticas" para que os dados estejam sempre atualizados. Esta alternância está no canto inferior direito do painel
+
+## Detalhes do dispositivo
+
+### Tela de resumo
+
+Há quatro seções na tela de resumo de detalhes do dispositivo
+
+- **Informações do dispositivo** Esta seção detalha informações sobre o dispositivo
+
+- O sistema operacional usado no dispositivo
+
+- Quando o dispositivo foi visto pela primeira vez no sistema ACT-Geosafe
+
+- A ID do dispositivo
+
+- A versão do ACT-Geosafe SDK instalado no dispositivo
+
+- **Atividade** Esta seção exibe um gráfico de pizza mostrando o número total de pesquisas que ocorreram naquele dispositivo. As pesquisas feitas dentro da região são representadas por verde e as pesquisas fora são representadas por vermelho.
+
+- **3 principais motivos de falha** Este gráfico mostra todas as pesquisas malsucedidas e as divide pelo motivo da falha
+
+- **Contas usadas** Esta seção detalha informações sobre todas as contas que usaram este dispositivo. As informações disponíveis são:
+
+- Cliente (ID da conta)** O ID do cliente da conta que realizou a pesquisa – Use este link para ir para a página Detalhes da conta para a conta selecionada
+
+- Visto pela última vez Quando a conta realizou uma pesquisa pela última vez
+
+- Visto pela primeira vez Quando a conta realizou uma pesquisa pela primeira vez
+
+- Último local conhecido Último local em que esta conta realizou uma pesquisa
+
+- Localizado por A tecnologia mais usada para localizar esta conta (GPS, celular, Wi-Fi etc.)
+
+- Atividade total Número total de pesquisas realizadas desta conta
+
+- Status Status da conta
+
+Pesquisas
+
+A página Pesquisas mostra todas as pesquisas que ocorreram para o intervalo de datas especificado. O intervalo de datas é selecionado usando os seletores de data no canto superior esquerdo da lista:
+
+O intervalo padrão é o dia atual
+
+As informações disponíveis na visualização de lista para cada pesquisa são as seguintes:
+
+Cliente (ID da conta)
+A ID da conta que realizou a pesquisa
+
+Data da transação
+A data e a hora em que a pesquisa ocorreu
+
+Status
+O resultado da pesquisa – se foi um sucesso ou falha e o motivo da falha
+
+Localização
+A latitude e a longitude do dispositivo quando a pesquisa foi realizada
+
+Localizado por
+Isso mostra a tecnologia que foi usada para encontrar a localização dos dispositivos (WiFi, GPS, celular etc.)
+
+ID da transação
+
+A ID exclusiva para a transação
+
+Locais
+
+A página Locais mostra pinos no mapa para todas as pesquisas que ocorreram para o intervalo de datas especificado. O intervalo de datas é selecionado usando os seletores de data no canto superior esquerdo da lista:
+
+O intervalo padrão é o dia atual
+
+Você pode aumentar ou diminuir o zoom do mapa usando os botões + e – no canto inferior direito do mapa.
+
+Para ir para a vista da rua, arraste e solte o ícone do homem amarelo no local escolhido
+
+Clique em um PIN para obter mais detalhes sobre essa pesquisa específica
+
+Detalhes da conta
+
+Resumo
+
+Há quatro seções na tela Resumo dos detalhes da conta
+
+Informações da conta
+Esta seção detalha informações sobre a conta
+
+Quando a conta foi vista pela primeira vez no sistema ACT-Geosafe
+
+Quando a conta foi vista pela última vez no sistema ACT-Geosafe
+
+A ID da conta
+
+O status da conta (ativa, bloqueada etc.)
+ 
+
+Atividade
+Esta seção exibe um gráfico de pizza mostrando o número total de pesquisas que ocorreram naquela conta. As pesquisas feitas dentro da região são representadas por verde e as pesquisas fora são representadas por vermelho.
+
+3 principais motivos para falha
+Este gráfico mostra todas as pesquisas malsucedidas e as divide pelo motivo pelo qual falharam
+
+Dispositivos usados ​​
+
+Esta seção detalha informações sobre todos os dispositivos que foram usados ​​para executar pesquisas nesta conta. As informações disponíveis são:
+
+ID do dispositivo
+ID do dispositivo que realizou a pesquisa – Use este link para ir para a página Detalhes do dispositivo para o dispositivo selecionado
+
+Último visto
+Quando o dispositivo realizou uma pesquisa pela última vez
+
+Primeiro visto
+
+Quando o dispositivo realizou uma pesquisa pela primeira vez
+
+Último local conhecido
+Último local em que este dispositivo realizou uma pesquisa
+
+Localizado por
+A tecnologia mais usada para localizar este dispositivo (GPS, celular, Wi-Fi etc.)
+
+Atividade total
+Número total de pesquisas realizadas neste dispositivo
+
+Status
+Status do dispositivo
+
+Pesquisas
+
+A página Pesquisas mostra todas as pesquisas que ocorreram para o intervalo de datas especificado. O intervalo de datas é selecionado usando os seletores de data no canto superior esquerdo da lista:
+
+O intervalo padrão é o dia atual
+
+As informações disponíveis na exibição de lista para cada pesquisa são as seguintes:
+
+ID do dispositivo
+A ID do dispositivo que realizou a pesquisa
+
+Data da transação
+A data e a hora em que a pesquisa ocorreu
+
+Status
+O resultado da pesquisa – se foi um sucesso ou falha e o motivo da falha
+
+Localização
+A latitude e a longitude do dispositivo quando ele realizou a pesquisa
+
+Localizado por
+Isso mostra a tecnologia que foi usada para encontrar a localização dos dispositivos (WiFi, GPS, celular etc.)
+
+ID da transação
+
+A ID exclusiva para a transação
+
+Locais
+
+A página Locais mostra pinos no mapa para todas as pesquisas que ocorreram para o intervalo de datas especificado. O intervalo de datas é selecionado usando os seletores de data no canto superior esquerdo da lista:
+
+O intervalo padrão é o dia atual
+
+Você pode aumentar ou diminuir o zoom do mapa usando os botões + e – no canto inferior direito do mapa.
+
+Para ir para a vista da rua, arraste e solte o ícone do homem amarelo no local escolhido
+
+Clique em um PIN para obter mais detalhes sobre essa pesquisa específica
+
+Pesquisar
+
+Existem dois tipos de pesquisas disponíveis, Básica e Avançada.
+
+A Pesquisa Básica permite que você pesquise pelo seguinte:
+
+ID da transação
+
+ID da conta
+
+ID do dispositivo
+
+Coordenadas de localização (latitude, longitude)
+
+Endereço IP
+
+A pesquisa avançada também permite que você pesquise pelo seguinte:
+
+Período da transação
+
+Tipo de dispositivo
+
+Clientes localizados por
+
+Motivo da falha
+
+Pesquisa básica
+
+Para usar a pesquisa básica, primeiro selecione o que deseja pesquisar selecionando a opção relevante no menu suspenso a seguir:
+
+Depois de selecionar a opção que deseja pesquisar, use o campo de texto para inserir o que deseja pesquisar.
+
+Pesquisa avançada
+
+A pesquisa avançada permite que você filtre ainda mais a consulta
+
+Período de transação
+
+O Período de transação permite que você pesquise por pesquisas feitas na semana, mês e 3 meses anteriores – ou você pode definir seu próprio intervalo usando o seletor de datas personalizadas
+
+Tipo de dispositivo
+
+A seção Tipo de dispositivo permite que você pesquise por pesquisas feitas por um tipo específico de dispositivo, por exemplo, iOS, Android etc.
+
+Clientes localizados por
+
+A seção Clientes localizados por permite que você pesquise por pesquisas onde a localização foi determinada usando uma tecnologia específica. As opções disponíveis estão listadas abaixo:
+
+Motivo da falha
+
