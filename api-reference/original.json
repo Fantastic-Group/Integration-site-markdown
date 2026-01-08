@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ACT.SI.Demo",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/GetTotals": {
+      "get": {
+        "tags": [
+          "GetTotals"
+        ],
+        "summary": "Retrieves aggregated totals for bookmakers, matches, leagues, and cups.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTotalsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetTotalsResponse": {
+        "type": "object",
+        "properties": {
+          "bookmakers": {
+            "type": "integer",
+            "description": "Total number of bookmakers.",
+            "format": "int32"
+          },
+          "matches": {
+            "type": "integer",
+            "description": "Total number of matches.",
+            "format": "int32"
+          },
+          "matchesWithOdds": {
+            "type": "integer",
+            "description": "Total number of matches with odds.",
+            "format": "int32"
+          },
+          "leagues": {
+            "type": "integer",
+            "description": "Total number of leagues.",
+            "format": "int32"
+          },
+          "cups": {
+            "type": "integer",
+            "description": "Total number of cups.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the response for GetTotals API."
+      }
+    }
+  }
+}
