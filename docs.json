@@ -14,20 +14,34 @@
                 "language": "en",
                 "tabs": [
                     {
-                        "tab": "ACT Geosafe"
+                        "tab": "ACT Geosafe",
+                        "groups": [
+                            {
+                                "group": "ACT Sports Integrity",
+                                "pages": [
+                                    "si/si"
+                                ]
+                            }
+                        ]                        
+                    },
+                    {
+                        "tab": "ACT Sports Integrity",
+                                "pages": [
+                                    "si/si"
+                                ]                        
+                    },
+                    {
+                        "tab": "ACT ID (KYC)",
+                                "pages": [
+                                    "si/si"
+                                ]
                         
                     },
                     {
-                        "tab": "ACT Sports Integrity"
-                        
-                    },
-                    {
-                        "tab": "ACT ID (KYC)"
-                        
-                    },
-                    {
-                        "tab": "Contact Us"
-                        
+                        "tab": "Contact Us",
+                                "pages": [
+                                    "si/si"
+                                ]                        
                     }
                 ]                
             },
@@ -35,16 +49,22 @@
                 "language": "pt-BR",
                 "tabs": [
                     {
-                        "tab": "ACT Geosafe"
-                        
+                        "tab": "ACT Geosafe",
+                                 "pages": [
+                                    "si/si"
+                                ]                       
                     },
                     {
-                        "tab": "ACT ID (KYC)"
-
+                        "tab": "ACT ID (KYC)",
+                                "pages": [
+                                    "si/si"
+                                ]
                     },
                     {
-                        "tab": "Contate-nos"
-
+                        "tab": "Contate-nos",
+                                "pages": [
+                                    "si/si"
+                                ]
                     }
                 ]
             }
