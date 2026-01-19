@@ -32,16 +32,16 @@
                     },
                     {
                         "tab": "ACT ID (KYC)",
-                                "pages": [
-                                    "si/si"
-                                ]
+                            "pages": [
+                                "si/si"
+                            ]
                         
                     },
                     {
                         "tab": "Contact Us",
-                                "pages": [
-                                    "si/si"
-                                ]                        
+                            "pages": [
+                                "si/si"
+                            ]                        
                     }
                 ]                
             },
@@ -50,21 +50,21 @@
                 "tabs": [
                     {
                         "tab": "ACT Geosafe",
-                                 "pages": [
-                                    "si/si"
-                                ]                       
+                            "pages": [
+                                "si/si"
+                            ]                       
                     },
                     {
                         "tab": "ACT ID (KYC)",
-                                "pages": [
-                                    "si/si"
-                                ]
+                            "pages": [
+                                "si/si"
+                            ]
                     },
                     {
                         "tab": "Contate-nos",
-                                "pages": [
-                                    "si/si"
-                                ]
+                            "pages": [
+                                "si/si"
+                            ]
                     }
                 ]
             }
